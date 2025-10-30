@@ -1,4 +1,4 @@
-function MainContent() {
+function Header() {
   return (
     <main>
       <p>I love to visit New York, Paris, and Tokyo.</p>
@@ -6,4 +6,4 @@ function MainContent() {
   );
 }
 
-export default MainContent;
+export default Header;
