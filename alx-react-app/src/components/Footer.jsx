@@ -1,7 +1,7 @@
 Function Footer() {
     return (
         <footer>
-            <p>I love to visit New York, Paris, and Tokyo.</p>
+            <p>© 2023 City Lovers</p>
         </footer>
     );
 }
