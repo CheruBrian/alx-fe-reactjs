@@ -8,4 +8,4 @@
    );
  };
  
- return default UserProfile;
+ export default UserProfile;
