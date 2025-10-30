@@ -19,6 +19,10 @@ function App() {
         <MainContent />
         <Footer />
       </div>
+       <div>
+      <h1>User Profile</h1>
+      <UserProfile name="Alice" age="25" bio="Loves hiking and photography" />
+    </div>
       <div>
         <a href="https://vite.dev" target="_blank">
           <img src={viteLogo} className="logo" alt="Vite logo" />
