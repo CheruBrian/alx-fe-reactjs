@@ -1,40 +1,25 @@
-import React from 'react';
-import { Link } from 'react-router-dom';
-import { useRecipeStore } from '../recipeStore_js';
+// src/components/RecipeList.jsx
+import { Link } from "react-router-dom";
+import { useRecipeStore } from "../store/recipeStore";
 
 const RecipeList = () => {
-  const filteredRecipes = useRecipeStore(state => state.filteredRecipes || state.recipes);
-  const addFavorite = useRecipeStore(state => state.addFavorite);
-  const removeFavorite = useRecipeStore(state => state.removeFavorite);
-  const favorites = useRecipeStore(state => state.favorites);
+  const filteredRecipes = useRecipeStore((state) => state.filteredRecipes);
 
-  const toggleFavorite = (id) => {
-    if (favorites.includes(id)) removeFavorite(id);
-    else addFavorite(id);
-  };
+  if (filteredRecipes.length === 0)
+    return <p className="text-center text-gray-500 mt-6">No recipes found.</p>;
 
   return (
-    <div>
-      <h2 className="text-xl font-bold mb-4">Recipes</h2>
-
-      {filteredRecipes.length === 0 && <p>No recipes found.</p>}
-
+    <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-4">
       {filteredRecipes.map((recipe) => (
-        <div key={recipe.id} className="border p-4 rounded mb-4 flex justify-between items-start">
-          <div>
-            <Link to={`/recipe/${recipe.id}`}>
-              <h3 className="text-lg font-bold text-blue-600 hover:underline">{recipe.title}</h3>
-            </Link>
-            <p>Ingredients: {recipe.ingredients.join(', ')}</p>
-            <p>Preparation Time: {recipe.time} minutes</p>
-          </div>
-
-          <button
-            onClick={() => toggleFavorite(recipe.id)}
-            className="ml-4 px-3 py-1 rounded border"
+        <div key={recipe.id} className="bg-white p-4 rounded-lg shadow">
+          <h2 className="text-xl font-semibold mb-2">{recipe.title}</h2>
+          <p className="text-gray-600 mb-3">{recipe.description}</p>
+          <Link
+            to={`/recipe/${recipe.id}`}
+            className="text-blue-600 hover:underline"
           >
-            {favorites.includes(recipe.id) ? '★ Remove' : '☆ Favorite'}
-          </button>
+            View Details
+          </Link>
         </div>
       ))}
     </div>
