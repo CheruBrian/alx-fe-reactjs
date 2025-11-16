@@ -1,152 +1,118 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 
-export const useRecipeStore = create(
-  persist(
-    (set, get) => ({
-      recipes: [],
-      searchTerm: '',
-      filters: {
-        difficulty: '',
-        maxCookingTime: '',
-        ingredients: []
-      },
-      
-      addFavorite: (recipeId) =>
-    set(state => ({
-      favorites: state.favorites.includes(recipeId)
-        ? state.favorites
-        : [...state.favorites, recipeId]
-    })),
-
-  removeFavorite: (recipeId) =>
-    set(state => ({
-      favorites: state.favorites.filter(id => id !== recipeId)
-    })),
-
-  generateRecommendations: () => {
-    const { recipes, favorites } = get();
-
-    // Example mock recommendation logic
-    const recommended = recipes.filter(recipe =>
-      favorites.includes(recipe.id) && Math.random() > 0.5
-    );
-
-    set({ recommendations: recommended });
-  }
-  
-      // Set search term
-      setSearchTerm: (term) => set({ searchTerm: term }),
-      
-      // Set filters
-      setFilters: (newFilters) => set({ filters: { ...get().filters, ...newFilters } }),
-      
-      // Clear all filters
-      clearFilters: () => set({ 
-        searchTerm: '',
-        filters: {
-          difficulty: '',
-          maxCookingTime: '',
-          ingredients: []
-        }
-      }),
-      
-      // Get filtered recipes
-      getFilteredRecipes: () => {
-        const { recipes, searchTerm, filters } = get();
-        
-        return recipes.filter(recipe => {
-          // Search term filter
-          const matchesSearch = searchTerm === '' || 
-            recipe.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            recipe.description.toLowerCase().includes(searchTerm.toLowerCase()) ||
-            recipe.ingredients.some(ingredient => 
-              ingredient.toLowerCase().includes(searchTerm.toLowerCase())
-            );
-          
-          // Difficulty filter
-          const matchesDifficulty = !filters.difficulty || 
-            recipe.difficulty === filters.difficulty;
-          
-          // Cooking time filter
-          const matchesCookingTime = !filters.maxCookingTime || 
-            parseInt(recipe.cookingTime) <= parseInt(filters.maxCookingTime);
-          
-          // Ingredients filter (if any ingredients are specified)
-          const matchesIngredients = filters.ingredients.length === 0 ||
-            filters.ingredients.some(filterIngredient =>
-              recipe.ingredients.some(recipeIngredient =>
-                recipeIngredient.toLowerCase().includes(filterIngredient.toLowerCase())
-              )
-            );
-          
-          return matchesSearch && matchesDifficulty && matchesCookingTime && matchesIngredients;
-        });
-      },
-      
-      // Get unique values for filter options
-      getFilterOptions: () => {
-        const recipes = get().recipes;
-        const difficulties = [...new Set(recipes.map(recipe => recipe.difficulty))];
-        const allIngredients = recipes.flatMap(recipe => recipe.ingredients);
-        const uniqueIngredients = [...new Set(allIngredients)].sort();
-        const maxCookingTime = Math.max(...recipes.map(recipe => parseInt(recipe.cookingTime)), 0);
-        
-        return {
-          difficulties,
-          ingredients: uniqueIngredients,
-          maxCookingTime
-        };
-      },
-      
-      // Original actions
-      addRecipe: (recipe) => set((state) => ({
-        recipes: [...state.recipes, { ...recipe, id: Date.now().toString() }]
-      })),
-      
-      updateRecipe: (id, updatedRecipe) => set((state) => ({
-        recipes: state.recipes.map(recipe =>
-          recipe.id === id ? { ...updatedRecipe, id } : recipe
-        )
-      })),
-      
-      deleteRecipe: (id) => set((state) => ({
-        recipes: state.recipes.filter(recipe => recipe.id !== id)
-      })),
-      
-      getRecipe: (id) => {
-        return get().recipes.find(recipe => recipe.id === id);
-      }
-    }),
-    {
-      name: 'recipe-storage',
-    }
-  )
-  export const useRecipeStore = create((set, get) => ({
+const useRecipeStore = create((set, get) => ({
   recipes: [],
   favorites: [],
   recommendations: [],
-
-  addFavorite: (recipeId) =>
-    set(state => ({
-      favorites: state.favorites.includes(recipeId)
-        ? state.favorites
-        : [...state.favorites, recipeId]
-    })),
-
-  removeFavorite: (recipeId) =>
-    set(state => ({
-      favorites: state.favorites.filter(id => id !== recipeId)
-    })),
-
-  generateRecommendations: () => {
-    const { recipes, favorites } = get();
-
-    // Mock recommendation logic
-    const recommended = recipes.filter(recipe =>
-      favorites.includes(recipe.id) && Math.random() > 0.5
+  userPreferences: {
+    dietaryRestrictions: [],
+    favoriteCuisines: [],
+    cookingTime: null,
+    difficulty: null,
+  },
+  
+  // Initialize with some sample recipes
+  initializeRecipes: (recipes) => set({ recipes }),
+  
+  // Favorites actions
+  addFavorite: (recipeId) => set(state => {
+    // Avoid duplicates
+    if (state.favorites.includes(recipeId)) return state;
+    return { favorites: [...state.favorites, recipeId] };
+  }),
+  
+  removeFavorite: (recipeId) => set(state => ({
+    favorites: state.favorites.filter(id => id !== recipeId)
+  })),
+  
+  toggleFavorite: (recipeId) => set(state => {
+    const isFavorite = state.favorites.includes(recipeId);
+    if (isFavorite) {
+      return { favorites: state.favorites.filter(id => id !== recipeId) };
+    } else {
+      return { favorites: [...state.favorites, recipeId] };
+    }
+  }),
+  
+  isFavorite: (recipeId) => get().favorites.includes(recipeId),
+  
+  // User preferences
+  updateUserPreferences: (preferences) => set(state => ({
+    userPreferences: { ...state.userPreferences, ...preferences }
+  })),
+  
+  // Enhanced recommendation system
+  generateRecommendations: () => set(state => {
+    const { recipes, favorites, userPreferences } = state;
+    
+    if (recipes.length === 0) return { recommendations: [] };
+    
+    // Get favorite recipes to understand user preferences
+    const favoriteRecipes = recipes.filter(recipe => 
+      favorites.includes(recipe.id)
     );
+    
+    // Calculate recommendation scores for each recipe
+    const scoredRecipes = recipes.map(recipe => {
+      let score = 0;
+      
+      // Skip already favorite recipes
+      if (favorites.includes(recipe.id)) {
+        return { ...recipe, score: -1 }; // Exclude favorites from recommendations
+      }
+      
+      // Score based on cuisine preferences
+      if (userPreferences.favoriteCuisines.length > 0) {
+        const cuisineMatch = userPreferences.favoriteCuisines.some(cuisine =>
+          recipe.cuisine?.toLowerCase().includes(cuisine.toLowerCase())
+        );
+        if (cuisineMatch) score += 3;
+      }
+      
+      // Score based on dietary restrictions
+      if (userPreferences.dietaryRestrictions.length > 0) {
+        const dietMatch = userPreferences.dietaryRestrictions.every(restriction =>
+          recipe.dietaryInfo?.includes(restriction)
+        );
+        if (dietMatch) score += 2;
+      }
+      
+      // Score based on cooking time preference
+      if (userPreferences.cookingTime && recipe.cookingTime) {
+        const timeDiff = Math.abs(recipe.cookingTime - userPreferences.cookingTime);
+        if (timeDiff <= 15) score += 1; // Within 15 minutes preference
+      }
+      
+      // Score based on difficulty preference
+      if (userPreferences.difficulty && recipe.difficulty) {
+        if (recipe.difficulty === userPreferences.difficulty) score += 1;
+      }
+      
+      // Score based on similar ingredients from favorites
+      if (favoriteRecipes.length > 0) {
+        const commonIngredients = favoriteRecipes.some(favRecipe =>
+          favRecipe.ingredients?.some(ingredient =>
+            recipe.ingredients?.includes(ingredient)
+          )
+        );
+        if (commonIngredients) score += 2;
+      }
+      
+      // Random factor to provide variety (0 to 1 points)
+      score += Math.random();
+      
+      return { ...recipe, score };
+    });
+    
+    // Sort by score and take top 6 recommendations
+    const recommendations = scoredRecipes
+      .filter(recipe => recipe.score > 0)
+      .sort((a, b) => b.score - a.score)
+      .slice(0, 6);
+    
+    return { recommendations };
+  }),
+}));
 
-    set({ recommendations: recommended });
-  }
-);
+export default useRecipeStore;
