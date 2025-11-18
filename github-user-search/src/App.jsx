@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import './App.css'
-import serach from './components/SearchBar'
 import SearchBar from './components/SearchBar'
 import UserCard from './components/'UserCard'
 import { getGitHubUser } './services/githubService'
