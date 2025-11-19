@@ -1,184 +1,143 @@
-// recipeStore.js
+// src/store/recipeStore.js
 import { create } from 'zustand';
 
 const useRecipeStore = create((set, get) => ({
+  // State with safe defaults
   recipes: [],
-
-   // ----- FAVORITES -----
-  favorites: [],
-  addFavorite: (recipeId) =>
-    set((state) => ({
-      favorites: [...state.favorites, recipeId],
-    })),
-  removeFavorite: (recipeId) =>
-    set((state) => ({
-      favorites: state.favorites.filter((id) => id !== recipeId),
-    })),
-
-  // ----- RECOMMENDATIONS -----
-  recommendations: [],
-  generateRecommendations: () =>
-    set((state) => {
-      // Simple mock recommendation logic
-      const recommended = state.recipes.filter(
-        (recipe) =>
-          state.favorites.includes(recipe.id) && Math.random() > 0.5
-      );
-
-      return { recommendations: recommended };
-    }),
-
-
-  addRecipe: (newRecipe) =>
-    set((state) => ({
-      recipes: [...state.recipes, newRecipe],
-    })),
-
-     updateRecipe: (updatedRecipe) =>
-    set((state) => ({
-      recipes: state.recipes.map((recipe) =>
-        recipe.id === updatedRecipe.id ? updatedRecipe : recipe
-      ),
-    })),
-
-     deleteRecipe: (id) =>
-    set((state) => ({
-      recipes: state.recipes.filter((recipe) => recipe.id !== id),
-    })),
-
-  // --- Filters ---
   searchTerm: '',
-  ingredientFilter: '',
-  maxTime: null,
-
-  filteredRecipes: [],
-
-  // --- Actions ---
-  setRecipes: (recipes) => {
-    set({ recipes });
-    get().applyFilters();
+  favorites: [],
+  recommendations: [],
+  
+  // Basic Recipe Actions
+  setRecipes: (recipes) => set({ 
+    recipes: Array.isArray(recipes) ? recipes : [] 
+  }),
+  
+  addRecipe: (newRecipe) => set(state => {
+    if (!newRecipe || typeof newRecipe !== 'object') {
+      console.error('Invalid recipe data:', newRecipe);
+      return state;
+    }
+    
+    const recipeWithId = { 
+      ...newRecipe, 
+      id: newRecipe.id || Date.now() + Math.random() 
+    };
+    
+    return { 
+      recipes: [...state.recipes, recipeWithId] 
+    };
+  }),
+  
+  updateRecipe: (recipeId, updatedRecipe) => set(state => {
+    if (!recipeId || !updatedRecipe) {
+      console.error('Invalid update parameters:', recipeId, updatedRecipe);
+      return state;
+    }
+    
+    return {
+      recipes: state.recipes.map(recipe =>
+        recipe.id === recipeId ? { ...recipe, ...updatedRecipe } : recipe
+      )
+    };
+  }),
+  
+  deleteRecipe: (recipeId) => set(state => ({
+    recipes: state.recipes.filter(recipe => recipe.id !== recipeId),
+    favorites: state.favorites.filter(id => id !== recipeId)
+  })),
+  
+  // Search and Filtering
+  setSearchTerm: (term) => set({ 
+    searchTerm: typeof term === 'string' ? term : '' 
+  }),
+  
+  getFilteredRecipes: () => {
+    try {
+      const { recipes, searchTerm } = get();
+      
+      if (!Array.isArray(recipes)) return [];
+      if (!searchTerm || !searchTerm.trim()) return recipes;
+      
+      const searchTermLower = searchTerm.toLowerCase();
+      
+      return recipes.filter(recipe => {
+        if (!recipe || typeof recipe !== 'object') return false;
+        
+        const titleMatch = recipe.title && 
+          recipe.title.toLowerCase().includes(searchTermLower);
+        const descriptionMatch = recipe.description && 
+          recipe.description.toLowerCase().includes(searchTermLower);
+        const ingredientsMatch = Array.isArray(recipe.ingredients) && 
+          recipe.ingredients.some(ingredient => 
+            ingredient && ingredient.toLowerCase().includes(searchTermLower)
+          );
+        
+        return titleMatch || descriptionMatch || ingredientsMatch;
+      });
+    } catch (error) {
+      console.error('Error in getFilteredRecipes:', error);
+      return get().recipes || [];
+    }
   },
-
-  setSearchTerm: (term) => {
-    set({ searchTerm: term });
-    get().applyFilters();
+  
+  // Favorites
+  addFavorite: (recipeId) => set(state => ({
+    favorites: [...state.favorites, recipeId]
+  })),
+  
+  removeFavorite: (recipeId) => set(state => ({
+    favorites: state.favorites.filter(id => id !== recipeId)
+  })),
+  
+  toggleFavorite: (recipeId) => set(state => {
+    const isFavorite = state.favorites.includes(recipeId);
+    return {
+      favorites: isFavorite
+        ? state.favorites.filter(id => id !== recipeId)
+        : [...state.favorites, recipeId]
+    };
+  }),
+  
+  isFavorite: (recipeId) => {
+    const favorites = get().favorites;
+    return Array.isArray(favorites) ? favorites.includes(recipeId) : false;
   },
-
-  setIngredientFilter: (ingredient) => {
-    set({ ingredientFilter: ingredient });
-    get().applyFilters();
-  },
-
-  setMaxTime: (time) => {
-    set({ maxTime: time });
-    get().applyFilters();
-  },
-
-  // --- Filter Logic ---
-  applyFilters: () => {
-    const { recipes, searchTerm, ingredientFilter, maxTime } = get();
-
-    let filtered = recipes;
-
-    // Search by title
-    if (searchTerm) {
-      filtered = filtered.filter((r) =>
-        r.title.toLowerCase().includes(searchTerm.toLowerCase())
+  
+  // Recommendations
+  generateRecommendations: () => set(state => {
+    try {
+      const { recipes, favorites } = state;
+      
+      if (!Array.isArray(recipes) || !Array.isArray(favorites)) {
+        return { recommendations: [] };
+      }
+      
+      const favoriteRecipes = recipes.filter(recipe =>
+        recipe && favorites.includes(recipe.id)
       );
+      
+      const recommended = recipes.filter(recipe => {
+        if (!recipe || favorites.includes(recipe.id)) return false;
+        
+        // Check if recipe shares categories with favorites
+        const hasCommonCategories = favoriteRecipes.some(fav =>
+          fav && recipe && fav.category && recipe.category && 
+          fav.category === recipe.category
+        );
+        
+        // Include some random recipes for variety
+        const isRandomPick = Math.random() > 0.7;
+        
+        return hasCommonCategories || isRandomPick;
+      });
+      
+      return { recommendations: recommended.slice(0, 5) };
+    } catch (error) {
+      console.error('Error generating recommendations:', error);
+      return { recommendations: [] };
     }
-
-    // Filter by ingredient
-    if (ingredientFilter) {
-      filtered = filtered.filter((r) =>
-        r.ingredients.some((ing) =>
-          ing.toLowerCase().includes(ingredientFilter.toLowerCase())
-        )
-      );
-    }
-
-    // Filter by max cooking time
-    if (maxTime) {
-      filtered = filtered.filter((r) => r.time <= maxTime);
-    }
-
-    set({ filteredRecipes: filtered });
-  },
-
-    // Extract patterns from favorites
-        const favoriteCategories = [...new Set(favoriteRecipes.flatMap(recipe => recipe.categories || []))];
-        const favoriteIngredients = [...new Set(favoriteRecipes.flatMap(recipe => recipe.ingredients || []))];
-        const avgCookingTime = favoriteRecipes.reduce((sum, recipe) => sum + (recipe.cookingTime || 0), 0) / favoriteRecipes.length;
-
-        // Generate recommendations based on multiple factors
-        const scoredRecipes = recipes.map(recipe => {
-          if (favorites.includes(recipe.id)) return { ...recipe, score: -1 }; // Exclude favorites
-
-          let score = 0;
-
-          // Category matching (40% weight)
-          const categoryMatch = recipe.categories?.filter(cat => 
-            favoriteCategories.includes(cat)
-          ).length || 0;
-          score += categoryMatch * 40;
-
-          // Ingredient similarity (30% weight)
-          const ingredientSimilarity = recipe.ingredients?.filter(ingredient =>
-            favoriteIngredients.some(favIngredient => 
-              favIngredient.toLowerCase().includes(ingredient.toLowerCase()) ||
-              ingredient.toLowerCase().includes(favIngredient.toLowerCase())
-            )
-          ).length || 0;
-          score += ingredientSimilarity * 30;
-
-          // Cooking time preference (15% weight)
-          if (recipe.cookingTime) {
-            const timeDiff = Math.abs(recipe.cookingTime - avgCookingTime);
-            score += Math.max(0, 15 - (timeDiff / 10));
-          }
-
-          // User preferences (15% weight)
-          if (userPreferences.dietaryRestrictions?.length > 0) {
-            const meetsDietary = userPreferences.dietaryRestrictions.every(restriction =>
-              recipe.dietaryInfo?.includes(restriction)
-            );
-            score += meetsDietary ? 15 : 0;
-          }
-
-          // Rating boost
-          score += (recipe.rating || 0) * 5;
-
-          return { ...recipe, score };
-        });
-
-        const recommended = scoredRecipes
-          .filter(recipe => recipe.score > 0)
-          .sort((a, b) => b.score - a.score)
-          .slice(0, 10);
-
-        set({ recommendations: recommended });
-      },
-
-      // Clear all data
-      clearUserData: () => set({ 
-        favorites: [], 
-        recommendations: [],
-        userPreferences: {
-          likedCategories: [],
-          dislikedIngredients: [],
-          dietaryRestrictions: [],
-          cookingTime: null,
-          difficulty: null
-        }
-      })
-    });
-    {
-      name: 'recipe-store',
-      partialize: (state) => ({ 
-        favorites: state.favorites,
-        userPreferences: state.userPreferences
-      })
-    }
-  ));
+  })
+}));
 
 export default useRecipeStore;
-export { useRecipeStore };
