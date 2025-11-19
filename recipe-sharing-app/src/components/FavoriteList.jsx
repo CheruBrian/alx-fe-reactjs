@@ -1,5 +1,5 @@
-// src/components/FavoritesList.jsx
-import React from "react";
+
+
 import { Link } from "react-router-dom";
 import { useRecipeStore } from "./recipeStore";
 
