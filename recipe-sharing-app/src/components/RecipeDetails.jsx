@@ -1,17 +1,32 @@
- import { useRecipeStore } from './recipeStore';
 
-  const RecipeDetails = ({ recipeId }) => {
-    const recipe = useRecipeStore(state =>
-      state.recipes.find(recipe => recipe.id === recipeId)
-    );
+import { useRecipeStore } from './components/recipeStore';
+import EditRecipeForm from './EditRecipeForm';
+import DeleteRecipeButton from './DeleteRecipeButton';
+import { useState } from 'react';
 
-    return (
-      <div>
-        <h1>{recipe.title}</h1>
-        <p>{recipe.description}</p>
-        {/* Render EditRecipeForm and DeleteRecipeButton here */}
-      </div>
-    );
-  };
+const RecipeDetails = ({ recipeId }) => {
+  const recipe = useRecipeStore(state => 
+    state.recipes.find(r => r.id === recipeId)
+  );
+  const [isEditing, setIsEditing] = useState(false);
 
-  export default RecipeDetails;
+  if (!recipe) return <p>Recipe not found</p>;
+
+  return (
+    <div>
+      <h1>{recipe.title}</h1>
+      <p>{recipe.description}</p>
+
+      {isEditing ? (
+        <EditRecipeForm recipe={recipe} onClose={() => setIsEditing(false)} />
+      ) : (
+        <>
+          <button onClick={() => setIsEditing(true)}>Edit</button>
+          <DeleteRecipeButton recipeId={recipe.id} />
+        </>
+      )}
+    </div>
+  );
+};
+
+export default RecipeDetails;
