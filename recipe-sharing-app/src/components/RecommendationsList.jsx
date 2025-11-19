@@ -1,47 +1,41 @@
-// src/components/RecommendationsList.jsx
-import React, { useEffect } from "react";
-import { useRecipeStore } from "./recipeStore";
-import { Link } from "react-router-dom";
+
+import { useEffect } from 'react';
+import useRecipeStore from '../recipeStore'
+import { Link } from 'react-router-dom';
 
 const RecommendationsList = () => {
-  const { recommendations, generateRecommendations } = useRecipeStore(
-    (state) => ({
-      recommendations: state.recommendations,
-      generateRecommendations: state.generateRecommendations,
-    })
-  );
+    const recommendations = useRecipeStore(state => state.recommendations);
+    const generateRecommendations = useRecipeStore(state => state.generateRecommendations);
 
-  // Generate new recommendations whenever component loads
-  useEffect(() => {
-    generateRecommendations();
-  }, [generateRecommendations]);
+    const toggleFavorite = useRecipeStore((state) => state.toggleFavorite);
+    const isFavorite = useRecipeStore((state) => state.isFavorite);
+    useEffect(() => {
+        generateRecommendations();
+    }, [generateRecommendations]);
 
-  if (recommendations.length === 0)
-    return (
-      <p className="text-center text-gray-500 mt-6">
-        No recommendations available yet.
-      </p>
-    );
+    if(recommendations.length === 0) {
+        return <div>No recommendations available at the moment.</div>
+    }
 
   return (
-    <div className="p-4">
-      <h2 className="text-2xl font-bold mb-4">Recommended for You 🍽️</h2>
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+    <div className='recommendation-list'>
+        <h2>Recommended for You </h2>
+        <div className="recipes-grid">
         {recommendations.map((recipe) => (
-          <div key={recipe.id} className="bg-white p-4 rounded-lg shadow">
-            <h3 className="text-lg font-semibold mb-2">{recipe.title}</h3>
-            <p className="text-gray-600 mb-3">{recipe.description}</p>
-            <Link
-              to={`/recipe/${recipe.id}`}
-              className="text-blue-600 hover:underline"
-            >
-              View Details
-            </Link>
+          <div key={recipe.id} className="recipe-card recommendation">
+            <div>
+              <h3> <Link to={`/recipe/${recipe.id}`}>{recipe.title}</Link></h3>
+              <button onClick={() => toggleFavorite(recipe.id)}>
+                {isFavorite(recipe.id) ? '★' : '☆'}
+              </button>
+            </div>
+            <p>{recipe.description}</p>
+            {recipe.prepTime && <p>Prep Time: {recipe.prepTime} mins</p>}
           </div>
         ))}
-      </div>
+      </div>    
     </div>
-  );
-};
+  )
+}
 
-export default RecommendationsList;
+export default RecommendationsList
