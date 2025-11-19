@@ -5,6 +5,10 @@ import { useState } from 'react';
     const addRecipe = useRecipeStore(state => state.addRecipe);
     const [title, setTitle] = useState('');
     const [description, setDescription] = useState('');
+    const [ingredients, setIngredients] = useState(['']);
+  const [instructions, setInstructions] = useState('');
+  const [prepTime, setPrepTime] = useState('');
+  const [category, setCategory] = useState('');
 
     const handleSubmit = (event) => {
       event.preventDefault();
