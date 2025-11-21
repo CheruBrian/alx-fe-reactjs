@@ -7,8 +7,12 @@ import RecipeDetails from './components/RecipeDetails';
 import EditRecipeForm from './components/EditRecipeForm';
 import FavoritesList from './components/FavoritesList';
 import SearchBar from './components/SearchBar';
+import RecommendationsList from './components/RecommendationsList';
 
 function App() {
+  const generateRecommendations = useRecipeStore(
+    (state) => state.generateRecommendations
+  );
   return (
     <Router>
       <div className="container mx-auto px-4">
