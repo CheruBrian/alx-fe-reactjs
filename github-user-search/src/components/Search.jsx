@@ -6,6 +6,8 @@ function Search() {
   const [users, setUsers] = useState([]); // 👈 list instead of single user
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [location, setLocation] = useState("");
+
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -35,6 +37,13 @@ function Search() {
           value={username}
           onChange={(e) => setUsername(e.target.value)}
           className="w-full p-3 text-lg border rounded-lg"
+        />
+        <input
+          type="text"
+          placeholder="Location (optional)..."
+          value={location}
+          onChange={(e) => setLocation(e.target.value)}
+          className="w-full p-3 mt-2 text-lg border rounded-lg"
         />
         <button
           type="submit"
