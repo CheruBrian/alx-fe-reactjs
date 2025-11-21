@@ -42,6 +42,22 @@ function Search() {
             border: "1px solid #ccc",
           }}
         />
+         <button
+          type="submit"
+          style={{
+            marginTop: "10px",
+            width: "100%",
+            padding: "10px",
+            fontSize: "16px",
+            borderRadius: "6px",
+            border: "none",
+            backgroundColor: "#007bff",
+            color: "white",
+            cursor: "pointer",
+          }}
+        >
+          Search
+        </button>
       </form>
 
       {/* Loading message */}
