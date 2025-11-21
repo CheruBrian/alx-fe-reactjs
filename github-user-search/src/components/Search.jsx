@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { fetchUserData } form "../services/githubService";
+import { fetchUserData } from "../services/githubService";
 
 function Search() {
   const [username, setUsername] = useState("");
-  const [user, setUser] = useState(null);
+  const [users, setUsers] = useState([]); // 👈 list instead of single user
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
 
@@ -14,71 +14,62 @@ function Search() {
 
     setLoading(true);
     setError("");
-    setUser(null);
+    setUsers([]);
 
     try {
-      const data = await fetchUserData(username);
-      setUser(data);
+      const results = await fetchUserData(username); // must return an array
+      setUsers(results); // 👈 store list
     } catch (err) {
-      setError("Looks like we can't find the user");
+      setError("No users found");
     } finally {
       setLoading(false);
     }
   };
 
   return (
-    <div style={{ width: "400px", margin: "20px auto" }}>
+    <div className="max-w-sm mx-auto mt-10 p-4">
       <form onSubmit={handleSubmit}>
         <input
           type="text"
           placeholder="Search GitHub username..."
           value={username}
           onChange={(e) => setUsername(e.target.value)}
-          style={{
-            width: "100%",
-            padding: "10px",
-            fontSize: "16px",
-            borderRadius: "6px",
-            border: "1px solid #ccc",
-          }}
+          className="w-full p-3 text-lg border rounded-lg"
         />
-         <button
+        <button
           type="submit"
-          style={{
-            marginTop: "10px",
-            width: "100%",
-            padding: "10px",
-            fontSize: "16px",
-            borderRadius: "6px",
-            border: "none",
-            backgroundColor: "#007bff",
-            color: "white",
-            cursor: "pointer",
-          }}
+          className="mt-3 w-full p-3 text-lg bg-blue-600 text-white rounded-lg"
         >
           Search
         </button>
       </form>
 
-      {/* Loading message */}
-      {loading && <p>Loading...</p>}
+      {loading && <p className="text-center mt-3">Loading...</p>}
+      {error && <p className="text-center mt-3 text-red-600">{error}</p>}
 
-      {/* Error message */}
-      {error && <p style={{ color: "red" }}>{error}</p>}
-
-      {/* Successful result */}
-      {user && (
-        <div style={{ marginTop: "20px", textAlign: "center" }}>
-          <img
-            src={user.avatar_url}
-            alt="avatar"
-            width="120"
-            style={{ borderRadius: "50%" }}
-          />
-          <h3>{user.name || user.login}</h3>
-          <a href={user.html_url} target="_blank" rel="noreferrer">
-            View Profile
-          </a>
+      {/* 👇 MAP GOES HERE */}
+      {users.length > 0 && (
+        <div className="mt-6 space-y-4">
+          {users.map((user) => (
+            <div key={user.id} className="p-4 border rounded-lg text-center">
+              <img
+                src={user.avatar_url}
+                alt="avatar"
+                className="w-20 h-20 rounded-full mx-auto"
+              />
+              <h3 className="mt-2 text-lg font-semibold">
+                {user.login}
+              </h3>
+              <a
+                href={user.html_url}
+                target="_blank"
+                rel="noreferrer"
+                className="text-blue-600 underline"
+              >
+                View Profile
+              </a>
+            </div>
+          ))}
         </div>
       )}
     </div>
