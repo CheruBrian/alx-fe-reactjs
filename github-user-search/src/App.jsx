@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import './App.css'
 import SearchBar from './components/SearchBar'
-import { getGitHubUser } './services/githubService'
+import { getGitHubUser } from './services/githubService'
 
 function App() {
   const [user, setUser] = useState(null);
