@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { fetchUserData } from "../services/githubService";
 import { advancedSearchUsers } from "../services/githubService";
-import SearchBar from "../../../recipe-sharing-app/src/components/SearchBar";
 
 function Search() {
   const [username, setUsername] = useState("");
@@ -123,6 +122,7 @@ const Search = () => {
       </div>
     </div>
   );
+};
 }
 
 //export default Search;
