@@ -3,6 +3,12 @@ import { create } from "zustand";
 export const useRecipeStore = create((set) => ({
   recipes: [],
 
+   // Recipe actions
+      setRecipes: (recipes) => set({ recipes }),
+      addRecipe: (recipe) => set(state => ({ 
+        recipes: [...state.recipes, { ...recipe, id: Date.now().toString() }] 
+      })),
+
   // ⭐ favorites array
   favorites: [],
 
