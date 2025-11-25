@@ -1,19 +1,21 @@
 function UserProfile() {
-  return (
-    <div className="bg-gray-100 p-8 max-w-sm mx-auto my-20 rounded-lg shadow-lg text-center">
-      <img
-        src="https://via.placeholder.com/150"
-        alt="User"
-        className="rounded-full w-36 h-36 mx-auto"
-      />
+ return (
+    <div className="mx-auto p-4 sm:p-4 md:p-8 bg-white rounded-2xl shadow max-w-xs sm:max-w-xs md:max-w-sm">
+      <div className="flex flex-col items-center text-center">
+        <img
+          src={user.profileImage}
+          alt="Profile"
+          className="rounded-full w-24 h-24 sm:w-24 sm:h-24 md:w-36 md:h-36 object-cover"
+        />
 
-      <h1 className="text-xl text-blue-800 my-4">
-        John Doe
-      </h1>
+        <h2 className="mt-4 font-semibold text-lg sm:text-lg md:text-xl">
+          {user.name}
+        </h2>
 
-      <p className="text-gray-600 text-base">
-        Developer at Example Co. Loves to write code and explore new technologies.
-      </p>
+        <p className="text-gray-600 text-sm sm:text-sm md:text-base mt-2">
+          {user.bio}
+        </p>
+      </div>
     </div>
   );
 }
