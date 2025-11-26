@@ -1,249 +1,126 @@
-import { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { useRecipeStore } from '../store/recipeStore';
+// EditRecipeForm.jsx
+// This component lets us edit an existing recipe
+// It's like a form that's already filled with the recipe's current information
 
-const event.preventDefault = () => {
-  const { id } = useParams();
+import { useState } from 'react';
+import { useRecipeStore } from './recipeStore';
+import { useNavigate } from 'react-router-dom';
+
+// This component takes a recipe object as a prop (the recipe we want to edit)
+const EditRecipeForm = ({ recipe }) => {
+  // useState creates state variables to track what we're typing
+  const [title, setTitle] = useState(recipe.title); // Start with current title
+  const [description, setDescription] = useState(recipe.description); // Start with current description
+
+  // Get the updateRecipe function from our store
+  const updateRecipe = useRecipeStore(state => state.updateRecipe);
+  
+  // useNavigate lets us go back to home after editing
   const navigate = useNavigate();
-  const { getRecipe, updateRecipe } = useRecipeStore();
-  const recipe = getRecipe(id);
 
-  const [formData, setFormData] = useState({
-    title: '',
-    description: '',
-    ingredients: [''],
-    instructions: [''],
-    cookingTime: '',
-    difficulty: 'Easy'
-  });
+  // This function runs when we submit the form
+  const handleSubmit = (event) => {
+    // Prevent the page from refreshing
+    event.preventDefault();
 
-  useEffect(() => {
-    if (recipe) {
-      setFormData({
-        title: recipe.title,
-        description: recipe.description,
-        ingredients: recipe.ingredients,
-        instructions: recipe.instructions,
-        cookingTime: recipe.cookingTime,
-        difficulty: recipe.difficulty
-      });
-    }
-  }, [recipe]);
+    // Update the recipe in our store with the new information
+    updateRecipe(recipe.id, {
+      title: title,
+      description: description
+    });
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
+    // Show a success message
+    alert('Recipe updated successfully! 🎉');
+
+    // Go back to the home page
+    navigate('/');
   };
-
-  const handleArrayChange = (index, value, field) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: prev[field].map((item, i) => i === index ? value : item)
-    }));
-  };
-
-  const addArrayField = (field) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: [...prev[field], '']
-    }));
-  };
-
-  const removeArrayField = (index, field) => {
-    setFormData(prev => ({
-      ...prev,
-      [field]: prev[field].filter((_, i) => i !== index)
-    }));
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    
-    // Filter out empty ingredients and instructions
-    const filteredData = {
-      ...formData,
-      ingredients: formData.ingredients.filter(ingredient => ingredient.trim() !== ''),
-      instructions: formData.instructions.filter(instruction => instruction.trim() !== '')
-    };
-
-    updateRecipe(id, filteredData);
-    navigate(`/recipe/${id}`);
-  };
-
-  if (!recipe) {
-    return (
-      <div className="container mx-auto p-4">
-        <div className="text-center">
-          <h2 className="text-2xl font-bold text-gray-800 mb-4">Recipe Not Found</h2>
-          <button 
-            onClick={() => navigate('/')}
-            className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-          >
-            Back to Recipes
-          </button>
-        </div>
-      </div>
-    );
-  }
 
   return (
-    <div className="container mx-auto p-4 max-w-2xl">
-      <div className="bg-white rounded-lg shadow-lg p-6">
-        <h1 className="text-3xl font-bold text-gray-800 mb-6">Edit Recipe</h1>
-        
-        <form onSubmit={handleSubmit} className="space-y-6">
-          {/* Title */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Recipe Title
-            </label>
-            <input
-              type="text"
-              name="title"
-              value={formData.title}
-              onChange={handleInputChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
-          </div>
+    <div style={{
+      backgroundColor: 'white',
+      padding: '30px',
+      borderRadius: '12px',
+      boxShadow: '0 5px 20px rgba(0,0,0,0.1)'
+    }}>
+      <h2 style={{ 
+        color: '#667eea',
+        marginBottom: '20px',
+        textAlign: 'center'
+      }}>
+        Edit Recipe
+      </h2>
 
-          {/* Description */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Description
-            </label>
-            <textarea
-              name="description"
-              value={formData.description}
-              onChange={handleInputChange}
-              rows="3"
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              required
-            />
-          </div>
+      <form onSubmit={handleSubmit}>
+        {/* Input for the recipe title */}
+        <input
+          type="text"
+          value={title}
+          onChange={(e) => setTitle(e.target.value)}
+          placeholder="Recipe Title"
+          style={{
+            width: '100%',
+            padding: '12px',
+            marginBottom: '15px',
+            border: '2px solid #e0e0e0',
+            borderRadius: '8px',
+            fontSize: '1em',
+            transition: 'all 0.3s ease',
+            boxSizing: 'border-box'
+          }}
+          onFocus={(e) => e.target.style.borderColor = '#667eea'}
+          onBlur={(e) => e.target.style.borderColor = '#e0e0e0'}
+        />
 
-          {/* Ingredients */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Ingredients
-            </label>
-            {formData.ingredients.map((ingredient, index) => (
-              <div key={index} className="flex mb-2">
-                <input
-                  type="text"
-                  value={ingredient}
-                  onChange={(e) => handleArrayChange(index, e.target.value, 'ingredients')}
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder={`Ingredient ${index + 1}`}
-                />
-                {formData.ingredients.length > 1 && (
-                  <button
-                    type="button"
-                    onClick={() => removeArrayField(index, 'ingredients')}
-                    className="ml-2 px-3 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
-                  >
-                    Remove
-                  </button>
-                )}
-              </div>
-            ))}
-            <button
-              type="button"
-              onClick={() => addArrayField('ingredients')}
-              className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
-            >
-              Add Ingredient
-            </button>
-          </div>
+        {/* Textarea for the recipe description */}
+        <textarea
+          value={description}
+          onChange={(e) => setDescription(e.target.value)}
+          placeholder="Recipe Description"
+          style={{
+            width: '100%',
+            padding: '12px',
+            marginBottom: '20px',
+            border: '2px solid #e0e0e0',
+            borderRadius: '8px',
+            fontSize: '1em',
+            minHeight: '150px',
+            transition: 'all 0.3s ease',
+            boxSizing: 'border-box',
+            fontFamily: 'inherit'
+          }}
+          onFocus={(e) => e.target.style.borderColor = '#667eea'}
+          onBlur={(e) => e.target.style.borderColor = '#e0e0e0'}
+        />
 
-          {/* Instructions */}
-          <div>
-            <label className="block text-sm font-medium text-gray-700 mb-2">
-              Instructions
-            </label>
-            {formData.instructions.map((instruction, index) => (
-              <div key={index} className="flex mb-2">
-                <textarea
-                  value={instruction}
-                  onChange={(e) => handleArrayChange(index, e.target.value, 'instructions')}
-                  className="flex-1 px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                  placeholder={`Step ${index + 1}`}
-                  rows="2"
-                />
-                {formData.instructions.length > 1 && (
-                  <button
-                    type="button"
-                    onClick={() => removeArrayField(index, 'instructions')}
-                    className="ml-2 px-3 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
-                  >
-                    Remove
-                  </button>
-                )}
-              </div>
-            ))}
-            <button
-              type="button"
-              onClick={() => addArrayField('instructions')}
-              className="bg-green-500 text-white px-4 py-2 rounded-md hover:bg-green-600"
-            >
-              Add Instruction
-            </button>
-          </div>
-
-          {/* Cooking Time & Difficulty */}
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Cooking Time (minutes)
-              </label>
-              <input
-                type="number"
-                name="cookingTime"
-                value={formData.cookingTime}
-                onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-                required
-                min="1"
-              />
-            </div>
-            <div>
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Difficulty
-              </label>
-              <select
-                name="difficulty"
-                value={formData.difficulty}
-                onChange={handleInputChange}
-                className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
-              >
-                <option value="Easy">Easy</option>
-                <option value="Medium">Medium</option>
-                <option value="Hard">Hard</option>
-              </select>
-            </div>
-          </div>
-
-          {/* Form Actions */}
-          <div className="flex justify-end space-x-4 pt-6">
-            <button
-              type="button"
-              onClick={() => navigate(`/recipe/${id}`)}
-              className="px-6 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
-            >
-              Cancel
-            </button>
-            <button
-              type="submit"
-              className="px-6 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              Update Recipe
-            </button>
-          </div>
-        </form>
-      </div>
+        {/* Submit button */}
+        <button
+          type="submit"
+          style={{
+            width: '100%',
+            padding: '12px',
+            backgroundColor: '#667eea',
+            color: 'white',
+            border: 'none',
+            borderRadius: '8px',
+            fontSize: '1.1em',
+            fontWeight: 'bold',
+            cursor: 'pointer',
+            transition: 'all 0.3s ease',
+            boxShadow: '0 5px 15px rgba(102, 126, 234, 0.4)'
+          }}
+          onMouseEnter={(e) => {
+            e.target.style.transform = 'translateY(-2px)';
+            e.target.style.boxShadow = '0 8px 25px rgba(102, 126, 234, 0.6)';
+          }}
+          onMouseLeave={(e) => {
+            e.target.style.transform = 'translateY(0)';
+            e.target.style.boxShadow = '0 5px 15px rgba(102, 126, 234, 0.4)';
+          }}
+        >
+          Save Changes
+        </button>
+      </form>
     </div>
   );
 };
