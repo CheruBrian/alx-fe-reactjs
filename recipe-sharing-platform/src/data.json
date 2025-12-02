@@ -1,0 +1,241 @@
+[
+  {
+    "id": 1,
+    "title": "Spaghetti Carbonara",
+    "summary": "A classic Italian pasta dish with eggs, cheese, bacon, and black pepper.",
+    "image": "https://images.unsplash.com/photo-1612874742237-6526221588e3?w=800&h=600&fit=crop",
+    "prepTime": "10 mins",
+    "cookTime": "20 mins",
+    "servings": 4,
+    "ingredients": [
+      "400g spaghetti",
+      "200g pancetta or bacon, diced",
+      "4 large eggs",
+      "100g Parmesan cheese, grated",
+      "2 cloves garlic, minced",
+      "Salt and black pepper to taste",
+      "Fresh parsley for garnish"
+    ],
+    "instructions": [
+      "Bring a large pot of salted water to boil and cook spaghetti according to package directions.",
+      "While pasta cooks, fry pancetta in a large skillet over medium heat until crispy, about 5-7 minutes.",
+      "In a bowl, whisk together eggs, Parmesan cheese, and black pepper.",
+      "Reserve 1 cup of pasta water, then drain the spaghetti.",
+      "Add the hot pasta to the skillet with pancetta and toss to combine.",
+      "Remove from heat and quickly stir in the egg mixture, adding pasta water as needed to create a creamy sauce.",
+      "Serve immediately with extra Parmesan and black pepper."
+    ]
+  },
+  {
+    "id": 2,
+    "title": "Chicken Tikka Masala",
+    "summary": "Chunks of grilled chicken cooked in a smooth buttery & creamy tomato based gravy.",
+    "image": "https://images.unsplash.com/photo-1565557623262-b51c2513a641?w=800&h=600&fit=crop",
+    "prepTime": "30 mins",
+    "cookTime": "40 mins",
+    "servings": 6,
+    "ingredients": [
+      "800g chicken breast, cubed",
+      "1 cup plain yogurt",
+      "2 tbsp tikka masala spice blend",
+      "400g crushed tomatoes",
+      "200ml heavy cream",
+      "1 large onion, diced",
+      "4 cloves garlic, minced",
+      "2 tbsp butter",
+      "Fresh cilantro for garnish",
+      "Salt to taste"
+    ],
+    "instructions": [
+      "Marinate chicken in yogurt and half the tikka masala spice for at least 30 minutes.",
+      "Grill or pan-fry marinated chicken until cooked through. Set aside.",
+      "In a large pan, melt butter and sauté onions until soft and golden.",
+      "Add garlic and remaining spices, cook for 1 minute until fragrant.",
+      "Add crushed tomatoes and simmer for 15 minutes.",
+      "Stir in heavy cream and cooked chicken, simmer for another 10 minutes.",
+      "Garnish with fresh cilantro and serve with rice or naan bread."
+    ]
+  },
+  {
+    "id": 3,
+    "title": "Caesar Salad",
+    "summary": "Fresh romaine lettuce with parmesan cheese, croutons, and classic Caesar dressing.",
+    "image": "https://images.unsplash.com/photo-1546793665-c74683f339c1?w=800&h=600&fit=crop",
+    "prepTime": "15 mins",
+    "cookTime": "5 mins",
+    "servings": 4,
+    "ingredients": [
+      "2 heads romaine lettuce, chopped",
+      "1 cup croutons",
+      "1/2 cup Parmesan cheese, shaved",
+      "2 egg yolks",
+      "2 cloves garlic, minced",
+      "1 tbsp Dijon mustard",
+      "2 tbsp lemon juice",
+      "1/2 cup olive oil",
+      "4 anchovy fillets (optional)",
+      "Salt and pepper to taste"
+    ],
+    "instructions": [
+      "In a bowl, whisk together egg yolks, garlic, Dijon mustard, and lemon juice.",
+      "Slowly drizzle in olive oil while whisking constantly to create an emulsion.",
+      "Add minced anchovies if using, and season with salt and pepper.",
+      "Place chopped romaine lettuce in a large bowl.",
+      "Add dressing and toss until lettuce is well coated.",
+      "Top with croutons and shaved Parmesan cheese.",
+      "Serve immediately for best texture."
+    ]
+  },
+  {
+    "id": 4,
+    "title": "Beef Tacos",
+    "summary": "Seasoned ground beef in crispy taco shells with fresh toppings and salsa.",
+    "image": "https://images.unsplash.com/photo-1565299507177-b0ac66763828?w=800&h=600&fit=crop",
+    "prepTime": "15 mins",
+    "cookTime": "15 mins",
+    "servings": 6,
+    "ingredients": [
+      "500g ground beef",
+      "1 packet taco seasoning",
+      "12 taco shells",
+      "1 cup shredded lettuce",
+      "1 cup diced tomatoes",
+      "1 cup shredded cheddar cheese",
+      "1/2 cup sour cream",
+      "1/2 cup salsa",
+      "1 avocado, sliced",
+      "Fresh cilantro"
+    ],
+    "instructions": [
+      "In a large skillet, brown ground beef over medium-high heat, breaking it up as it cooks.",
+      "Drain excess fat and add taco seasoning with 1/4 cup water.",
+      "Simmer for 5 minutes until sauce thickens.",
+      "Warm taco shells according to package directions.",
+      "Fill each taco shell with seasoned beef.",
+      "Top with lettuce, tomatoes, cheese, sour cream, and salsa.",
+      "Garnish with avocado slices and fresh cilantro. Serve immediately."
+    ]
+  },
+  {
+    "id": 5,
+    "title": "Margherita Pizza",
+    "summary": "Traditional Italian pizza with tomato sauce, fresh mozzarella, and basil.",
+    "image": "https://images.unsplash.com/photo-1574071318508-1cdbab80d002?w=800&h=600&fit=crop",
+    "prepTime": "20 mins",
+    "cookTime": "15 mins",
+    "servings": 4,
+    "ingredients": [
+      "1 pizza dough (homemade or store-bought)",
+      "1 cup tomato sauce",
+      "250g fresh mozzarella, sliced",
+      "Fresh basil leaves",
+      "2 tbsp olive oil",
+      "2 cloves garlic, minced",
+      "Salt to taste",
+      "Red pepper flakes (optional)"
+    ],
+    "instructions": [
+      "Preheat oven to 475°F (245°C) with a pizza stone if available.",
+      "Roll out pizza dough on a floured surface to desired thickness.",
+      "Mix tomato sauce with garlic, salt, and a drizzle of olive oil.",
+      "Spread sauce evenly over the dough, leaving a border for the crust.",
+      "Arrange mozzarella slices evenly over the sauce.",
+      "Bake for 12-15 minutes until crust is golden and cheese is bubbly.",
+      "Remove from oven, top with fresh basil leaves and a drizzle of olive oil. Slice and serve."
+    ]
+  },
+  {
+    "id": 6,
+    "title": "Chocolate Chip Cookies",
+    "summary": "Soft and chewy cookies loaded with chocolate chips, perfect for dessert.",
+    "image": "https://images.unsplash.com/photo-1499636136210-6f4ee915583e?w=800&h=600&fit=crop",
+    "prepTime": "15 mins",
+    "cookTime": "12 mins",
+    "servings": 24,
+    "ingredients": [
+      "2 1/4 cups all-purpose flour",
+      "1 tsp baking soda",
+      "1 tsp salt",
+      "1 cup butter, softened",
+      "3/4 cup granulated sugar",
+      "3/4 cup brown sugar",
+      "2 large eggs",
+      "2 tsp vanilla extract",
+      "2 cups chocolate chips"
+    ],
+    "instructions": [
+      "Preheat oven to 375°F (190°C).",
+      "In a bowl, whisk together flour, baking soda, and salt.",
+      "In a separate large bowl, cream together butter and both sugars until fluffy.",
+      "Beat in eggs one at a time, then add vanilla extract.",
+      "Gradually mix in the flour mixture until just combined.",
+      "Fold in chocolate chips.",
+      "Drop rounded tablespoons of dough onto baking sheets, spacing 2 inches apart.",
+      "Bake for 10-12 minutes until edges are golden. Cool on baking sheet for 2 minutes before transferring."
+    ]
+  },
+  {
+    "id": 7,
+    "title": "Greek Moussaka",
+    "summary": "Layered eggplant casserole with spiced meat sauce and creamy béchamel topping.",
+    "image": "https://images.unsplash.com/photo-1601050690597-df0568f70950?w=800&h=600&fit=crop",
+    "prepTime": "40 mins",
+    "cookTime": "60 mins",
+    "servings": 8,
+    "ingredients": [
+      "3 large eggplants, sliced",
+      "500g ground lamb or beef",
+      "1 large onion, diced",
+      "3 cloves garlic, minced",
+      "400g crushed tomatoes",
+      "1 tsp cinnamon",
+      "4 tbsp butter",
+      "4 tbsp flour",
+      "2 cups milk",
+      "2 eggs",
+      "1 cup grated Parmesan cheese",
+      "Olive oil, salt, and pepper"
+    ],
+    "instructions": [
+      "Preheat oven to 375°F (190°C). Brush eggplant slices with olive oil and bake for 20 minutes.",
+      "In a pan, cook ground meat with onions and garlic until browned.",
+      "Add tomatoes, cinnamon, salt, and pepper. Simmer for 20 minutes.",
+      "For béchamel: melt butter, whisk in flour, then gradually add milk. Cook until thick.",
+      "Remove from heat and whisk in eggs and half the cheese.",
+      "In a baking dish, layer: eggplant, meat sauce, repeat. Top with béchamel.",
+      "Sprinkle remaining cheese on top and bake for 45 minutes until golden.",
+      "Let rest for 15 minutes before serving."
+    ]
+  },
+  {
+    "id": 8,
+    "title": "Thai Green Curry",
+    "summary": "Aromatic coconut curry with vegetables and Thai basil, served with jasmine rice.",
+    "image": "https://images.unsplash.com/photo-1455619452474-d2be8b1e70cd?w=800&h=600&fit=crop",
+    "prepTime": "20 mins",
+    "cookTime": "25 mins",
+    "servings": 4,
+    "ingredients": [
+      "400ml coconut milk",
+      "3 tbsp green curry paste",
+      "300g chicken or tofu, cubed",
+      "1 cup bamboo shoots",
+      "1 red bell pepper, sliced",
+      "1 cup green beans",
+      "2 tbsp fish sauce",
+      "1 tbsp palm sugar",
+      "Fresh Thai basil leaves",
+      "1 lime",
+      "Jasmine rice for serving"
+    ],
+    "instructions": [
+      "In a large pot, heat 1/4 cup coconut milk over medium heat until it separates.",
+      "Add green curry paste and fry for 2 minutes until fragrant.",
+      "Add chicken or tofu and cook until no longer pink.",
+      "Pour in remaining coconut milk and bring to a simmer.",
+      "Add vegetables, fish sauce, and palm sugar. Cook for 10 minutes.",
+      "Stir in Thai basil leaves and cook for 1 more minute.",
+      "Squeeze lime juice over the curry and serve hot with jasmine rice."
+    ]
+  }
+]
