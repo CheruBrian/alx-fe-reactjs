@@ -119,7 +119,7 @@ const RegistrationForm = () => {
             type="text"
             id="username"
             name="username"
-            value={formData.username}
+            value={username}
             onChange={handleChange}
             placeholder="Enter username"
             className={errors.username ? 'error' : ''}
@@ -133,7 +133,7 @@ const RegistrationForm = () => {
             type="email"
             id="email"
             name="email"
-            value={formData.email}
+            value={email}
             onChange={handleChange}
             placeholder="Enter email"
             className={errors.email ? 'error' : ''}
@@ -147,7 +147,7 @@ const RegistrationForm = () => {
             type="password"
             id="password"
             name="password"
-            value={formData.password}
+            value={password}
             onChange={handleChange}
             placeholder="Enter password"
             className={errors.password ? 'error' : ''}
