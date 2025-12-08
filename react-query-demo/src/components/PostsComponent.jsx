@@ -2,12 +2,12 @@ import { useQuery } from '@tanstack/react-query';
 
 export default function PostsComponent() {
 
-  const { data, isLoading, isError, refetch } = useQuery({
+  const { data, isLoading, isError, fetchPosts } = useQuery({
     queryKey: ["posts"],
 
     queryFn: async () => {
       const res = await fetch("https://jsonplaceholder.typicode.com/posts");
-      if (!res.ok) throw new Error("Failed to fetch");
+      if (!res.ok) throw new error("Failed to fetch");
       return res.json();
     },
 
