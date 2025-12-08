@@ -4,13 +4,13 @@ export default function PostsComponent() {
   const { data, isLoading, error, refetch } = useQuery({
     queryKey: ["posts"],
     queryFn: async () => {
-      const res = await fetch("https://jsonplaceholder.typicode.com/posts");
+      const res = await fetchPosts("https://jsonplaceholder.typicode.com/posts");
       return res.json();
     }
   });
 
   if (isLoading) return <p>Loading...</p>;
-  if (error) return <p>Error fetching posts</p>;
+  if (isError) return <p>Error fetching posts</p>;
 
   return (
     <div>
