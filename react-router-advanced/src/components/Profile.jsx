@@ -1,4 +1,5 @@
 import { Outlet, Link } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Home from "./pages/Home";
 import Login from "./pages/Login";
 import ProfileDetails from "./pages/ProfileDetails";
